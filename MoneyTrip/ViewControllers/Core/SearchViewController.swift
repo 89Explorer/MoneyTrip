@@ -8,57 +8,43 @@
 import UIKit
 
 class SearchViewController: UIViewController {
-
+    
+    // MARK: - UI Components
+    let searchController: UISearchController = {
+        let searchController = UISearchController(searchResultsController: SearchResultslViewController())
+        searchController.searchBar.searchBarStyle = .minimal
+        searchController.searchBar.placeholder = "장소 또는 지역을 검색해주세요"
+        searchController.hidesNavigationBarDuringPresentation = false  // 서치바를 누르면 숨겨지는 네비게이션바 기능을 해제함
+        return searchController
+    }()
+    
+    // MARK: - Life cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        view.backgroundColor = .systemBackground
+        navigationItem.searchController = searchController
+        searchController.searchResultsUpdater = self
+  
+        configureSearchTitle()
     }
-    // explore 뷰 내에 최상단 카테고리 함수
-//    func getExploreCollectionView() {
-//
-//        exploreMainView.headerView.mainCategoryCollectionView.delegate = self
-//        exploreMainView.headerView.mainCategoryCollectionView.dataSource = self
-//        exploreMainView.headerView.mainCategoryCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-//
-//        exploreMainView.headerView.firstCategoryCollectionView.delegate = self
-//        exploreMainView.headerView.firstCategoryCollectionView.dataSource = self
-//        exploreMainView.headerView.firstCategoryCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-//    }
+    
+    // MARK: - Functions
+    /// SearchViewController 내에 네비게이션 타이틀 설정 함수
+    func configureSearchTitle() {
+        navigationItem.title = "어딜 가고 싶은신가요?"
+        navigationController?.navigationBar.titleTextAttributes = [
+            NSAttributedString.Key.foregroundColor: UIColor.label,
+            NSAttributedString.Key.font: UIFont(name: "HakgyoansimBunpilR", size: 24) ?? UIFont.systemFont(ofSize: 18)
+        ]
+    }
+    
 }
-//
-//
-//extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        if collectionView == exploreMainView.headerView.mainCategoryCollectionView {
-//            return 5
-//        }
-//
-//        if collectionView == exploreMainView.headerView.firstCategoryCollectionView {
-//            return 6
-//        }
-//
-//        return 10
-//    }
-//
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        if collectionView == exploreMainView.headerView.mainCategoryCollectionView {
-//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-//
-//            cell.backgroundColor = .brown
-//
-//            return cell
-//        }
-//
-//        if collectionView == exploreMainView.headerView.firstCategoryCollectionView {
-//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-//
-//            cell.backgroundColor = .systemBlue
-//            return cell
-//        }
-//
-//        return UICollectionViewCell()
-//    }
-//}
 
-
+// MARK: - Extensions
+extension SearchViewController: UISearchResultsUpdating {
+    func updateSearchResults(for searchController: UISearchController) {
+        
+        guard let text = searchController.searchBar.text else { return }
+        print(text)
+    }
+}

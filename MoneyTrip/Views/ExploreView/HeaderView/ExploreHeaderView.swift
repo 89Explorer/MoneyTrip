@@ -56,9 +56,9 @@ class ExploreHeaderView: UIView {
     
     let areaTitle: UILabel = {
         let label = UILabel()
-        label.text = "알고 싶은 지역을 선택해주세요"
+        label.text = "지역을 선택해주세요😀"
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont(name: "HakgyoansimBunpilR", size: 20)
+        label.font = UIFont(name: "HakgyoansimBunpilR", size: 18)
         label.textColor = .label
         return label
     }()
@@ -140,13 +140,13 @@ class ExploreHeaderView: UIView {
         
         let areaTitleConstraints = [
             areaTitle.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 30),
-            areaTitle.topAnchor.constraint(equalTo: recommenSpotCollectionView.bottomAnchor, constant: 15)
+            areaTitle.topAnchor.constraint(equalTo: recommenSpotCollectionView.bottomAnchor, constant: 10)
         ]
         
         let areaCollectionViewConstraints = [
             areaCollectionView.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 20),
             areaCollectionView.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -20),
-            areaCollectionView.topAnchor.constraint(equalTo: areaTitle.bottomAnchor, constant: 5),
+            areaCollectionView.topAnchor.constraint(equalTo: areaTitle.bottomAnchor, constant: 10),
             areaCollectionView.heightAnchor.constraint(equalToConstant: 120)
         ]
         
