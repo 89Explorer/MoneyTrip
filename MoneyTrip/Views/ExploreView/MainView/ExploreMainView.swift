@@ -55,7 +55,7 @@ class ExploreMainView: UIView {
             headerView.leadingAnchor.constraint(equalTo: basicView.leadingAnchor),
             headerView.trailingAnchor.constraint(equalTo: basicView.trailingAnchor),
             headerView.topAnchor.constraint(equalTo: basicView.topAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: 550)
+            headerView.heightAnchor.constraint(equalToConstant: 600)
         ]
         
         NSLayoutConstraint.activate(basicViewConstraints)

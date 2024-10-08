@@ -31,11 +31,52 @@ class ExploreHeaderView: UIView {
     
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.text = "Welcome user"
+        label.text = "환영합니다, user"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont(name: "HakgyoansimBunpilR", size: 28)
         label.textColor = .label
         return label
+    }()
+    
+    let recommenSpotCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 10
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: 300, height: 280)
+        // layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .secondarySystemBackground
+        collectionView.layer.cornerRadius = 5
+        collectionView.clipsToBounds = true
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.showsHorizontalScrollIndicator = false
+        return collectionView
+    }()
+    
+    let areaTitle: UILabel = {
+        let label = UILabel()
+        label.text = "알고 싶은 지역을 선택해주세요"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.font = UIFont(name: "HakgyoansimBunpilR", size: 20)
+        label.textColor = .label
+        return label
+    }()
+    
+    let areaCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = 10
+        layout.scrollDirection = .horizontal
+        layout.itemSize = CGSize(width: 100, height: 50)
+        // layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .secondarySystemBackground
+        collectionView.layer.cornerRadius = 5
+        collectionView.clipsToBounds = true
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.showsHorizontalScrollIndicator = false
+        return collectionView
     }()
     
     
@@ -62,12 +103,15 @@ class ExploreHeaderView: UIView {
         super.init(frame: frame)
         backgroundColor = .systemBackground
         
-        titleLabel.text = "Welcome \(self.username)"
+        titleLabel.text = "환영합니다, \(self.username)"
         
         addSubview(basicView)
         basicView.addSubview(titleLabel)
         // basicView.addSubview(infoLabel)
         basicView.addSubview(alarmButton)
+        basicView.addSubview(recommenSpotCollectionView)
+        basicView.addSubview(areaTitle)
+        basicView.addSubview(areaCollectionView)
         
         configureConstraints()
     }
@@ -98,6 +142,25 @@ class ExploreHeaderView: UIView {
             alarmButton.topAnchor.constraint(equalTo: titleLabel.topAnchor)
         ]
         
+        let recommenSpotCollectionViewConstraints = [
+            recommenSpotCollectionView.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 20),
+            recommenSpotCollectionView.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -20),
+            recommenSpotCollectionView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 15),
+            recommenSpotCollectionView.heightAnchor.constraint(equalToConstant: 300)
+        ]
+        
+        let areaTitleConstraints = [
+            areaTitle.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 30),
+            areaTitle.topAnchor.constraint(equalTo: recommenSpotCollectionView.bottomAnchor, constant: 15)
+        ]
+        
+        let areaCollectionViewConstraints = [
+            areaCollectionView.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 20),
+            areaCollectionView.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -20),
+            areaCollectionView.topAnchor.constraint(equalTo: areaTitle.bottomAnchor, constant: 5),
+            areaCollectionView.heightAnchor.constraint(equalToConstant: 120)
+        ]
+        
 //        let infoLabelConstraints = [
 //            infoLabel.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 30),
 //            infoLabel.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -30),
@@ -108,6 +171,9 @@ class ExploreHeaderView: UIView {
         NSLayoutConstraint.activate(titleLabelConstraints)
         //NSLayoutConstraint.activate(infoLabelConstraints)
         NSLayoutConstraint.activate(alarmButtonConstraints)
+        NSLayoutConstraint.activate(recommenSpotCollectionViewConstraints)
+        NSLayoutConstraint.activate(areaTitleConstraints)
+        NSLayoutConstraint.activate(areaCollectionViewConstraints)
     }
 }
 

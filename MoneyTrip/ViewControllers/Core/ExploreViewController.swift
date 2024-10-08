@@ -25,6 +25,7 @@ class ExploreViewController: UIViewController {
         view.addSubview(exploreMainView)
         configureConstraints()
         
+        configureCollectionView()
     }
     
     // MARK: - Layouts
@@ -41,50 +42,46 @@ class ExploreViewController: UIViewController {
     }
     
     // MARK: - Functions
-    
-    // explore 뷰 내에 최상단 카테고리 함수
-//    func getExploreCollectionView() {
-//        
-//        exploreMainView.headerView.mainCategoryCollectionView.delegate = self
-//        exploreMainView.headerView.mainCategoryCollectionView.dataSource = self
-//        exploreMainView.headerView.mainCategoryCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-//        
-//        exploreMainView.headerView.firstCategoryCollectionView.delegate = self
-//        exploreMainView.headerView.firstCategoryCollectionView.dataSource = self
-//        exploreMainView.headerView.firstCategoryCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
-//    }
+
+    /// 홈화면 컬렉션뷰 관련 델리게이트 밑 데이터소스를 지정하는 함수
+    func configureCollectionView() {
+        exploreMainView.headerView.recommenSpotCollectionView.delegate = self
+        exploreMainView.headerView.recommenSpotCollectionView.dataSource = self
+        exploreMainView.headerView.recommenSpotCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        
+        exploreMainView.headerView.areaCollectionView.delegate = self
+        exploreMainView.headerView.areaCollectionView.dataSource = self
+        exploreMainView.headerView.areaCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+    }
 }
-//
-//
-//extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-//    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-//        if collectionView == exploreMainView.headerView.mainCategoryCollectionView {
-//            return 5
-//        }
-//        
-//        if collectionView == exploreMainView.headerView.firstCategoryCollectionView {
-//            return 6
-//        }
-//        
-//        return 10
-//    }
-//    
-//    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-//        if collectionView == exploreMainView.headerView.mainCategoryCollectionView {
-//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-//            
-//            cell.backgroundColor = .brown
-//            
-//            return cell
-//        }
-//        
-//        if collectionView == exploreMainView.headerView.firstCategoryCollectionView {
-//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-//            
-//            cell.backgroundColor = .systemBlue
-//            return cell
-//        }
-//        
-//        return UICollectionViewCell()
-//    }
-//}
+
+
+extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataSource {
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if collectionView == exploreMainView.headerView.recommenSpotCollectionView {
+            return 5
+        }
+        
+        if collectionView == exploreMainView.headerView.areaCollectionView {
+            return 17
+        }
+        
+        return 10
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        if collectionView == exploreMainView.headerView.recommenSpotCollectionView {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+            cell.backgroundColor = .systemRed
+            return cell
+        }
+        
+        if collectionView == exploreMainView.headerView.areaCollectionView {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+            cell.backgroundColor = .systemYellow
+            return cell 
+        }
+        
+        return UICollectionViewCell()
+    }
+}
