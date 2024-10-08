@@ -10,15 +10,23 @@ import UIKit
 class ExploreMainView: UIView {
     
     // MARK: - UI Components
-    let basicView: UIView = {
-        let view = UIView()
+    let basicView: UIScrollView = {
+        let view = UIScrollView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .systemBackground
+        view.showsVerticalScrollIndicator = false
+        view.contentInsetAdjustmentBehavior = .never // Safe Area 인셋 무시
         return view
     }()
     
     let headerView: ExploreHeaderView = {
         let view = ExploreHeaderView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        return view
+    }()
+    
+    let bodyView: ExploreBodyView = {
+        let view = ExploreBodyView()
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
@@ -32,6 +40,7 @@ class ExploreMainView: UIView {
         addSubview(basicView)
         
         basicView.addSubview(headerView)
+        basicView.addSubview(bodyView)
         
         configureContraints()
     }
@@ -55,10 +64,20 @@ class ExploreMainView: UIView {
             headerView.leadingAnchor.constraint(equalTo: basicView.leadingAnchor),
             headerView.trailingAnchor.constraint(equalTo: basicView.trailingAnchor),
             headerView.topAnchor.constraint(equalTo: basicView.topAnchor),
+            headerView.widthAnchor.constraint(equalTo: basicView.widthAnchor),
             headerView.heightAnchor.constraint(equalToConstant: 600)
+        ]
+        
+        let bodyViewConstraints = [
+            bodyView.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 10),
+            bodyView.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -10),
+            bodyView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 35),
+            bodyView.heightAnchor.constraint(equalToConstant: 1280),
+            bodyView.bottomAnchor.constraint(equalTo: basicView.bottomAnchor, constant: -70)
         ]
         
         NSLayoutConstraint.activate(basicViewConstraints)
         NSLayoutConstraint.activate(headerViewConstraints)
+        NSLayoutConstraint.activate(bodyViewConstraints)
     }
 }

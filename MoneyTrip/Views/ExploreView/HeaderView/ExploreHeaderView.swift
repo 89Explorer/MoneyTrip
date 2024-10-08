@@ -21,7 +21,7 @@ class ExploreHeaderView: UIView {
                                     .layerMaxXMaxYCorner]  // 좌, 우 하단 적용
         view.layer.shadowColor = UIColor.systemMint.cgColor
         view.layer.shadowOpacity = 1
-        view.layer.shadowOffset = CGSize(width: 0, height: 5)
+        view.layer.shadowOffset = CGSize(width: 0, height: 0)
         view.layer.shadowRadius = 20
         
         // view.layer.shadowPath = UIBezierPath(rect: view.bounds).cgPath
@@ -78,16 +78,6 @@ class ExploreHeaderView: UIView {
         collectionView.showsHorizontalScrollIndicator = false
         return collectionView
     }()
-    
-    
-//    let infoLabel: UILabel = {
-//        let label = UILabel()
-//        label.text = "관광지 유형을 선택해주세요 "
-//        label.translatesAutoresizingMaskIntoConstraints = false
-//        label.font = UIFont(name: "HakgyoansimBunpilR", size: 18)
-//        label.textColor = .label
-//        return label
-//    }()
 
     let alarmButton: UIButton = {
         let button = UIButton(type: .system)
@@ -107,7 +97,6 @@ class ExploreHeaderView: UIView {
         
         addSubview(basicView)
         basicView.addSubview(titleLabel)
-        // basicView.addSubview(infoLabel)
         basicView.addSubview(alarmButton)
         basicView.addSubview(recommenSpotCollectionView)
         basicView.addSubview(areaTitle)
@@ -138,7 +127,7 @@ class ExploreHeaderView: UIView {
         ]
         
         let alarmButtonConstraints = [
-            alarmButton.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -10),
+            alarmButton.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -30),
             alarmButton.topAnchor.constraint(equalTo: titleLabel.topAnchor)
         ]
         
@@ -161,15 +150,8 @@ class ExploreHeaderView: UIView {
             areaCollectionView.heightAnchor.constraint(equalToConstant: 120)
         ]
         
-//        let infoLabelConstraints = [
-//            infoLabel.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 30),
-//            infoLabel.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -30),
-//            infoLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5)
-//        ]
-        
         NSLayoutConstraint.activate(basicViewConstraints)
         NSLayoutConstraint.activate(titleLabelConstraints)
-        //NSLayoutConstraint.activate(infoLabelConstraints)
         NSLayoutConstraint.activate(alarmButtonConstraints)
         NSLayoutConstraint.activate(recommenSpotCollectionViewConstraints)
         NSLayoutConstraint.activate(areaTitleConstraints)
