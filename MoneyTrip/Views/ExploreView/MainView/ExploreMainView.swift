@@ -65,7 +65,7 @@ class ExploreMainView: UIView {
             headerView.trailingAnchor.constraint(equalTo: basicView.trailingAnchor),
             headerView.topAnchor.constraint(equalTo: basicView.topAnchor),
             headerView.widthAnchor.constraint(equalTo: basicView.widthAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: 600)
+            headerView.heightAnchor.constraint(equalToConstant: 580)
         ]
         
         let bodyViewConstraints = [
