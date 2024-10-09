@@ -26,16 +26,21 @@ class SearchViewController: UIViewController {
         searchController.searchResultsUpdater = self
   
         configureSearchTitle()
+        
+        // 서치바에 검색 중일 때 네비게이션바 부분 숨기기 기능 
+        searchController.hidesNavigationBarDuringPresentation = true
     }
     
     // MARK: - Functions
     /// SearchViewController 내에 네비게이션 타이틀 설정 함수
     func configureSearchTitle() {
-        navigationItem.title = "어딜 가고 싶은신가요?"
-        navigationController?.navigationBar.titleTextAttributes = [
-            NSAttributedString.Key.foregroundColor: UIColor.label,
-            NSAttributedString.Key.font: UIFont(name: "HakgyoansimBunpilR", size: 24) ?? UIFont.systemFont(ofSize: 18)
-        ]
+        
+        let titleLabel = UILabel()
+        titleLabel.text = "어딜 가고 싶은신가요?"
+        titleLabel.textColor = .label
+        titleLabel.font = UIFont(name: "HakgyoansimBunpilR", size: 24)
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleLabel)
     }
     
 }

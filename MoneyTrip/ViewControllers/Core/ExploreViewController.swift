@@ -11,7 +11,8 @@ class ExploreViewController: UIViewController {
     
     // MARK: - Variables
     var categories: [String] = ["자연 여행", "문화 여행", "음식 여행", "코스 여행", "쇼핑 여행"]
-
+    var lastContentOffset: CGFloat = 0.0
+    
     // MARK: - UI Components
     let exploreMainView: ExploreMainView = {
         let view = ExploreMainView()
@@ -30,20 +31,24 @@ class ExploreViewController: UIViewController {
         
         configureCollectionView()
         configureTableView()
+        configureSearchTitle()
+        
+        // 화면을 아래로 스크롤하면 네비게이션바 부분이 숨겨지고, 반대로 하면 나타나는 기능
+        navigationController?.hidesBarsOnSwipe = true
     }
     
     // 네비게이션바를 투명하게 만드는 함수
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-        navigationController?.navigationBar.shadowImage = UIImage()
-        navigationController?.navigationBar.isTranslucent = true
-    }
+//    override func viewWillAppear(_ animated: Bool) {
+//        super.viewWillAppear(animated)
+//        
+//        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+//        navigationController?.navigationBar.shadowImage = UIImage()
+//        navigationController?.navigationBar.isTranslucent = true
+//    }
     
     // MARK: - Layouts
     private func configureConstraints() {
-
+        
         let exploreMainViewConstraint = [
             exploreMainView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             exploreMainView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -56,6 +61,25 @@ class ExploreViewController: UIViewController {
     
     
     // MARK: - Functions
+    
+    /// exploreViewController 내에 네비게이션 바 부분에 제목과 버튼 기능 추가하는 함수
+    func configureSearchTitle() {
+        
+        let titleLabel = UILabel()
+        titleLabel.text = "환영합니다. Harry Potter"
+        titleLabel.textColor = .label
+        titleLabel.font = UIFont(name: "HakgyoansimBunpilR", size: 24)
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(customView: titleLabel)
+        
+        let alarmButton = UIButton(type: .system)
+        alarmButton.setImage(UIImage(systemName: "bell"), for: .normal)
+        alarmButton.tintColor = .label
+        alarmButton.addTarget(self, action: #selector(didTappedAlarmbutton), for: .touchUpInside)
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: alarmButton)
+    }
+    
     /// 홈화면 컬렉션뷰 관련 델리게이트 밑 데이터소스를 지정하는 함수
     func configureCollectionView() {
         exploreMainView.headerView.recommenSpotCollectionView.delegate = self
@@ -77,6 +101,11 @@ class ExploreViewController: UIViewController {
     /// 테이블 섹션 타이틀 "더보기" 버튼 함수
     @objc func moreButtonTapped(_ sender: UIButton) {
         print("더 보기 버튼 클릭 ")
+    }
+    
+    
+    @objc func didTappedAlarmbutton() {
+        print("didTappedAlarmbutton() - called")
     }
 }
 
@@ -106,7 +135,7 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
         if collectionView == exploreMainView.headerView.areaCollectionView {
             let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
             cell.backgroundColor = .systemYellow
-            return cell 
+            return cell
         }
         
         return UICollectionViewCell()
@@ -175,3 +204,4 @@ extension ExploreViewController: UITableViewDelegate, UITableViewDataSource {
         return headerView
     }
 }
+

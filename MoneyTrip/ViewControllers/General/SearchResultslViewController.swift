@@ -16,6 +16,7 @@ class SearchResultslViewController: UIViewController {
     let resultsTableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .insetGrouped)
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.backgroundColor = .systemBackground
         tableView.isScrollEnabled = true
         tableView.tintColor = .label
         tableView.separatorStyle = .none
@@ -89,6 +90,7 @@ extension SearchResultslViewController: UITableViewDelegate, UITableViewDataSour
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         
         cell.backgroundColor = .red
+        cell.selectionStyle = .none
         return cell
     }
     
@@ -136,13 +138,15 @@ extension SearchResultslViewController: UITableViewDelegate, UITableViewDataSour
         // 섹션에 따라 버튼 타이틀을 설정
         switch section {
         case 0:
-            button.setTitle("관광지 검색결과 더보기", for: .normal)
+            button.setTitle("\(categories[section]) 검색결과 더보기", for: .normal)
         case 1:
-            button.setTitle("가이드 검색결과 더보기", for: .normal)
+            button.setTitle("\(categories[section]) 검색결과 더보기", for: .normal)
         case 2:
-            button.setTitle("여행기 검색결과 더보기", for: .normal)
+            button.setTitle("\(categories[section]) 검색결과 더보기", for: .normal)
         case 3:
-            button.setTitle("숙소 검색결과 더보기", for: .normal)
+            button.setTitle("\(categories[section]) 검색결과 더보기", for: .normal)
+        case 4:
+            button.setTitle("\(categories[section]) 검색결과 더보기", for: .normal)
         default:
             button.setTitle("더보기", for: .normal) // 기본값
         }

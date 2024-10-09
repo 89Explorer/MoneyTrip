@@ -29,14 +29,14 @@ class ExploreHeaderView: UIView {
         return view
     }()
     
-    let titleLabel: UILabel = {
-        let label = UILabel()
-        label.text = "환영합니다, user"
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont(name: "HakgyoansimBunpilR", size: 28)
-        label.textColor = .label
-        return label
-    }()
+//    let titleLabel: UILabel = {
+//        let label = UILabel()
+//        label.text = "환영합니다, user"
+//        label.translatesAutoresizingMaskIntoConstraints = false
+//        label.font = UIFont(name: "HakgyoansimBunpilR", size: 28)
+//        label.textColor = .label
+//        return label
+//    }()
     
     let recommenSpotCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -79,13 +79,13 @@ class ExploreHeaderView: UIView {
         return collectionView
     }()
 
-    let alarmButton: UIButton = {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        button.setImage(UIImage(systemName: "bell"), for: .normal)
-        button.tintColor = .label
-        return button
-    }()
+//    let alarmButton: UIButton = {
+//        let button = UIButton(type: .system)
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        button.setImage(UIImage(systemName: "bell"), for: .normal)
+//        button.tintColor = .label
+//        return button
+//    }()
     
     
     // MARK: - Initializations
@@ -93,11 +93,11 @@ class ExploreHeaderView: UIView {
         super.init(frame: frame)
         backgroundColor = .systemBackground
         
-        titleLabel.text = "환영합니다, \(self.username)"
+        // titleLabel.text = "환영합니다, \(self.username)"
         
         addSubview(basicView)
-        basicView.addSubview(titleLabel)
-        basicView.addSubview(alarmButton)
+        //basicView.addSubview(titleLabel)
+        //basicView.addSubview(alarmButton)
         basicView.addSubview(recommenSpotCollectionView)
         basicView.addSubview(areaTitle)
         basicView.addSubview(areaCollectionView)
@@ -120,21 +120,21 @@ class ExploreHeaderView: UIView {
             basicView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ]
         
-        let titleLabelConstraints = [
-            titleLabel.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 30),
-            titleLabel.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -30),
-            titleLabel.topAnchor.constraint(equalTo: basicView.topAnchor, constant: 75)
-        ]
-        
-        let alarmButtonConstraints = [
-            alarmButton.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -30),
-            alarmButton.topAnchor.constraint(equalTo: titleLabel.topAnchor)
-        ]
+//        let titleLabelConstraints = [
+//            titleLabel.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 30),
+//            titleLabel.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -30),
+//            titleLabel.topAnchor.constraint(equalTo: basicView.topAnchor, constant: 75)
+//        ]
+//        
+//        let alarmButtonConstraints = [
+//            alarmButton.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -30),
+//            alarmButton.topAnchor.constraint(equalTo: titleLabel.topAnchor)
+//        ]
         
         let recommenSpotCollectionViewConstraints = [
             recommenSpotCollectionView.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 20),
             recommenSpotCollectionView.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -20),
-            recommenSpotCollectionView.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 15),
+            recommenSpotCollectionView.topAnchor.constraint(equalTo: basicView.safeAreaLayoutGuide.topAnchor),
             recommenSpotCollectionView.heightAnchor.constraint(equalToConstant: 300)
         ]
         
@@ -151,8 +151,8 @@ class ExploreHeaderView: UIView {
         ]
         
         NSLayoutConstraint.activate(basicViewConstraints)
-        NSLayoutConstraint.activate(titleLabelConstraints)
-        NSLayoutConstraint.activate(alarmButtonConstraints)
+//        NSLayoutConstraint.activate(titleLabelConstraints)
+//        NSLayoutConstraint.activate(alarmButtonConstraints)
         NSLayoutConstraint.activate(recommenSpotCollectionViewConstraints)
         NSLayoutConstraint.activate(areaTitleConstraints)
         NSLayoutConstraint.activate(areaCollectionViewConstraints)
