@@ -14,7 +14,7 @@ class MainTabBarController: UITabBarController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         
-        configureMainTabBar()
+        //configureMainTabBar()
     }
     
     // MARK: - Functions

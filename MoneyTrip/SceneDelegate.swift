@@ -12,12 +12,53 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     var window: UIWindow?
 
 
+//    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+//        guard let windowScene = (scene as? UIWindowScene) else { return }
+//        window = UIWindow(frame: windowScene.coordinateSpace.bounds)
+//        window?.windowScene = windowScene
+//        
+//        let mainTabBarController = MainTabBarController()
+//        
+//        window?.rootViewController = mainTabBarController
+//        window?.makeKeyAndVisible()
+//    }
+    
+    
+    // iOS 13 이후에는 여기에 구현 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
         
         let mainTabBarController = MainTabBarController()
+        
+        let exploreVC = UINavigationController(rootViewController: ExploreViewController())
+        let searchVC = UINavigationController(rootViewController: SearchViewController())
+        let mapVC = UINavigationController(rootViewController: MapViewController())
+        let profileVC = UINavigationController(rootViewController: ProfileViewController())
+        
+        exploreVC.tabBarItem.image = UIImage(systemName: "house.circle")
+        exploreVC.tabBarItem.selectedImage = UIImage(systemName: "house.circle.fill")
+        exploreVC.tabBarItem.title = "Explore"
+        
+        searchVC.tabBarItem.image = UIImage(systemName: "magnifyingglass.circle")
+        searchVC.tabBarItem.selectedImage = UIImage(systemName: "magnifyingglass.circle.fill")
+        searchVC.tabBarItem.title = "Search"
+        
+        mapVC.tabBarItem.image = UIImage(systemName: "map.circle")
+        mapVC.tabBarItem.selectedImage = UIImage(systemName: "map.circle.fill")
+        mapVC.tabBarItem.title = "Map"
+        
+        profileVC.tabBarItem.image = UIImage(systemName: "person.circle")
+        profileVC.tabBarItem.selectedImage = UIImage(systemName: "person.circle.fill")
+        profileVC.tabBarItem.title = "Profile"
+        
+        mainTabBarController.tabBar.tintColor = .label
+        mainTabBarController.tabBar.unselectedItemTintColor = .secondaryLabel
+        mainTabBarController.tabBar.backgroundColor = .secondarySystemBackground
+        
+        mainTabBarController.setViewControllers([exploreVC, searchVC, mapVC, profileVC], animated: true)
         
         window?.rootViewController = mainTabBarController
         window?.makeKeyAndVisible()
@@ -53,7 +94,5 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Save changes in the application's managed object context when the application transitions to the background.
         (UIApplication.shared.delegate as? AppDelegate)?.saveContext()
     }
-
-
 }
 
