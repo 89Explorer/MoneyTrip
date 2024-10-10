@@ -15,6 +15,7 @@ class MapViewController: UIViewController {
     
     // MARK: - Variables
     let locationManager = CLLocationManager()
+    var newHeightConstraint: NSLayoutConstraint!
     
     
     // MARK: - UI Components
@@ -42,9 +43,16 @@ class MapViewController: UIViewController {
         mapView.locationMapView.showsUserLocation = true   // 사용자 위치 표시
         mapView.locationMapView.delegate = self
         
+        mapSearchView.searchBar.delegate = self   // Search Bar delegate
+        
         locationManager.delegate = self
         locationManager.requestWhenInUseAuthorization() // 권한 요청
         locationManager.startUpdatingLocation()
+        
+        // MapSearchView의 topAnchor를 기준으로 userLocationButton 위치 설정
+        mapView.positionUserLocationButton(relativeTo: mapSearchView.topAnchor)
+        
+        configureUserLocationButton()
     }
     
     
@@ -75,43 +83,30 @@ class MapViewController: UIViewController {
         NSLayoutConstraint.activate(mapSearchViewConstraints)
     }
     
-    
     func gestureMapSearchView() {
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(handlePanGesture(_:)))
         mapSearchView.addGestureRecognizer(panGesture)
+    }
+    
+    func configureUserLocationButton() {
+        mapView.userLocationButton.addTarget(self, action: #selector(userLocationButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc func userLocationButtonTapped() {
+        print("userLocationButton() - called")
     }
     
     
     // MARK: - Pan Gesture Handler for SearchView height adjustment
     @objc func handlePanGesture(_ gesture: UIPanGestureRecognizer) {
         
-        let translation = gesture.translation(in: view)
-        /*
-         gesture.translation(in: view)는 팬 제스처가 발생한 동안 사용자가 손가락을 얼마나 이동했는지를 반환하는 메서드야.
-         translation은 제스처가 시작된 이후로 손가락이 움직인 좌표 차이(x, y)를 나타내는 CGPoint 객체를 반환해. 이 좌표는 특정 뷰(in: view)를 기준으로 계산돼.
-         
-         이 값은 제스처가 시작한 지점과 현재 지점 사이의 차이를 나타내며, 위 코드에서는 translation.y가 사용돼서 세로 방향으로 얼마만큼 움직였는지를 계산하는 데 사용되고 있어.
-         그 값(translation.y)을 사용해 searchViewHeightConstraint.constant에 더하거나 빼서 searchView의 높이를 실시간으로 조절하는 방식이야. 즉, 팬 제스처로 사용자가 손가락을 얼마나 위아래로 움직였는지에 따라 searchView의 높이가 달라지게 돼.
-         */
-        
-        let newHeight = mapSearchView.mapSearchViewHeightConstraint.constant - translation.y
-        /*
-         .constant는 해당 제약 조건의 실제 값을 의미
-         */
-        
-        
+        let translation = gesture.translation(in: view)   // 제스처가 시작된 이후 이동된 위치를 나타냄
+        let newHeight = mapSearchView.mapSearchViewHeightConstraint.constant - translation.y  // mapSearchView의 높이를 실시간으로 조절, .constant는 해당 제약 조건의 실제 값을 의미
+
         // mapSearchView 높이를 조정하는 코드
         if newHeight >= 150 && newHeight <= 650 { // 최소 높이 150, 최대 높이 650 이렇게 조건을 걸어서 mapSearchView가 너무 작아지거나 너무 커지지 않도록 최소 높이와 최대 높이를 설정
-            mapSearchView.mapSearchViewHeightConstraint.constant = newHeight
-            /*
-             이 코드는 팬 제스처로 계산된 newHeight 값을 searchViewHeightConstraint.constant에 할당해서, 실시간으로 searchView의 높이를 조정하는 거야. 사용자가 손가락을 팬 하면 그에 맞춰 뷰의 높이가 즉시 변하는 것.
-             */
-            gesture.setTranslation(.zero, in: view) // 다음 변환을 위한 초기화
-            /*
-             의미: 이 코드는 팬 제스처가 끝나지 않았더라도 현재 제스처의 이동값을 초기화하는 역할을 해.
-             팬 제스처가 한 번 시작되면 gesture.translation(in:)은 팬이 시작된 지점부터 계속 이동값을 누적해서 계산해. 그래서 제스처가 발생할 때마다 그 누적된 값을 초기화해 주기 위해 gesture.setTranslation(.zero, in: view)를 호출해 이동 거리를 0으로 리셋하는 거야.
-             이렇게 함으로써 다음 팬 동작에서 새로운 움직임이 이전 팬 동작에 영향을 미치지 않도록 해주는 거지.
-             */
+            mapSearchView.mapSearchViewHeightConstraint.constant = newHeight  // 팬 제스처로 계산된 newHeight 값을 searchViewHeightConstraint.constant에 할당해서, 실시간으로 searchView의 높이를 조정
+            gesture.setTranslation(.zero, in: view) // 다음 변환을 위한 초기화, gesture.translation(in:)은 팬이 시작된 지점부터 계속 이동값을 누적되기 때문
         }
         
         if gesture.state == .ended {
@@ -158,5 +153,47 @@ extension MapViewController: CLLocationManagerDelegate, MKMapViewDelegate {
         let regionRadius: CLLocationDistance = 1000
         let coordinateRegion = MKCoordinateRegion(center: location.coordinate, latitudinalMeters: regionRadius, longitudinalMeters: regionRadius)
         mapView.locationMapView.setRegion(coordinateRegion, animated: true)
+    }
+}
+
+// MARK: - UISearchBarDelegate
+extension MapViewController: UISearchBarDelegate {
+
+    
+    // UISearchBarDelegate Methods
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let searchText = searchBar.text else { return }
+        performSearch(query: searchText)
+        
+        // 서치바에 검색을 마무리하고 나면 뷰가 올라오게 한다.
+        UIView.animate(withDuration: 0.3) {
+            self.mapSearchView.mapSearchViewHeightConstraint.constant = 650
+            self.view.layoutIfNeeded()
+        }
+        
+        // 키보드 창에 "검색"이라는 버튼을 누르면 키보드가 내려간다.
+        searchBar.resignFirstResponder()
+    }
+    
+    // 검색 로직 구현
+    private func performSearch(query: String) {
+        print("Searching for: \(query)")
+        // 실제 검색을 수행하는 로직 추가 (예: 장소 검색)
+    }
+    
+    
+    // 빈 화면을 누르면 키보드가 내려가게 설정
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        view.endEditing(true)
+    }
+    
+    
+    // 서치바를 눌렀을 때 키보드가 올라오면서 그에 해당하는 view의 높이도 조절
+    // 다만, 키보드가 내려갔을 때,높이는 원상복귀되지 않음
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        UIView.animate(withDuration: 0.3) {
+            self.mapSearchView.mapSearchViewHeightConstraint.constant = 400
+            self.view.layoutIfNeeded()
+        }
     }
 }

@@ -17,6 +17,16 @@ class MapView: UIView {
         return mapView
     }()
     
+    let userLocationButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let configure = UIImage.SymbolConfiguration(pointSize: 20)
+        let image = UIImage(systemName: "location.circle", withConfiguration: configure)
+        button.setImage(image, for: .normal)
+        button.tintColor = .label
+        return button
+    }()
+    
     let showMapSearchButton: UIButton = {
         let button = UIButton(type: .system)
         let configure = UIImage.SymbolConfiguration(pointSize: 20)
@@ -40,6 +50,7 @@ class MapView: UIView {
     // MARK: - Layouts
     private func configureConstraints() {
         addSubview(locationMapView)
+        addSubview(userLocationButton)
         
         let locationMapViewConstraints = [
             locationMapView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -48,6 +59,19 @@ class MapView: UIView {
             locationMapView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ]
         
+        let userLocationButtonConstraints = [
+            userLocationButton.widthAnchor.constraint(equalToConstant: 40),
+            userLocationButton.heightAnchor.constraint(equalToConstant: 40)
+        ]
+        
         NSLayoutConstraint.activate(locationMapViewConstraints)
+        NSLayoutConstraint.activate(userLocationButtonConstraints)
+    }
+    
+    // MARK: - Functions
+    // MapSearchView의 위치에 맞춰 userLocationButton의 위치 조정
+    func positionUserLocationButton(relativeTo searchViewTopAnchor: NSLayoutYAxisAnchor) {
+        userLocationButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20).isActive = true
+        userLocationButton.bottomAnchor.constraint(equalTo: searchViewTopAnchor, constant: -10).isActive = true
     }
 }

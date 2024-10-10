@@ -20,14 +20,22 @@ class MapSearchView: UIView {
         view.layer.cornerRadius = 15
         view.layer.maskedCorners = CACornerMask(arrayLiteral: [.layerMaxXMinYCorner, .layerMinXMinYCorner])
         return view
-        
     }()
+    
+    let searchBar: UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.translatesAutoresizingMaskIntoConstraints = false
+        searchBar.placeholder = "장소 또는 지역을 검색해주세요"
+        searchBar.searchBarStyle = .minimal   // 이거 설정 안하면 서치바 위, 아래로 줄이 있다.
+        return searchBar
+    }()
+    
     
     // MARK: - Initializations
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        mapSearchViewHeightConstraint = heightAnchor.constraint(equalToConstant: 350)
+        mapSearchViewHeightConstraint = heightAnchor.constraint(equalToConstant: 250)
         
         configureConstraints()
     }
@@ -40,6 +48,7 @@ class MapSearchView: UIView {
     private func configureConstraints() {
         
         addSubview(mapSearchView)
+        addSubview(searchBar)
         
         let mapSearchViewConstraints = [
             mapSearchView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -49,6 +58,14 @@ class MapSearchView: UIView {
             mapSearchViewHeightConstraint!
         ]
         
+        let searchBarConstraints = [
+            searchBar.leadingAnchor.constraint(equalTo: mapSearchView.leadingAnchor, constant: 30),
+            searchBar.trailingAnchor.constraint(equalTo: mapSearchView.trailingAnchor, constant: -30),
+            searchBar.topAnchor.constraint(equalTo: mapSearchView.topAnchor, constant: 10),
+            searchBar.heightAnchor.constraint(equalToConstant: 44)
+        ]
+
         NSLayoutConstraint.activate(mapSearchViewConstraints)
+        NSLayoutConstraint.activate(searchBarConstraints)
     }
 }
