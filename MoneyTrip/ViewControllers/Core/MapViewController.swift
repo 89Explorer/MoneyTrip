@@ -31,7 +31,7 @@ class MapViewController: UIViewController {
         return view
     }()
     
-    // MARK: - Life Cycle
+    // MARK: - Initializations
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground

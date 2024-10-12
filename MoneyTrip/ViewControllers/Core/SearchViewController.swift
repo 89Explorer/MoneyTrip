@@ -18,7 +18,7 @@ class SearchViewController: UIViewController {
         return searchController
     }()
     
-    // MARK: - Life cycle
+    // MARK: - Initializations
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -27,7 +27,7 @@ class SearchViewController: UIViewController {
   
         configureSearchTitle()
         
-        // 서치바에 검색 중일 때 네비게이션바 부분 숨기기 기능 
+        // 서치바에 검색 중일 때 네비게이션바 부분 숨기기 기능
         searchController.hidesNavigationBarDuringPresentation = true
     }
     
