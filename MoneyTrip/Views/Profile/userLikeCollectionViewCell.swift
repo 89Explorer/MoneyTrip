@@ -27,7 +27,9 @@ class userLikeCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .systemMint
-//        layer.opacity = 0.5
+        layer.cornerRadius = 5
+        clipsToBounds = true
+        layer.opacity = 0.2
         
         configureConstraints()
 

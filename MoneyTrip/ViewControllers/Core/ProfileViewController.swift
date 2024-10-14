@@ -9,6 +9,8 @@ import UIKit
 
 class ProfileViewController: UIViewController {
     
+    var selectedColor: UIColor = .systemRed
+    
     // MARK: - UI Components
     let profileView: ProfileView = {
         let view = ProfileView()
@@ -20,6 +22,9 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        
+        profileView.userInfoStackView()
+        addGestureRecognizers()
         
         configureSearchTitle()
         collectionViewDelegate()
@@ -70,18 +75,85 @@ class ProfileViewController: UIViewController {
         profileView.userLikesCollectionView.delegate = self
         profileView.userLikesCollectionView.dataSource = self
         profileView.userLikesCollectionView.register(userLikeCollectionViewCell.self, forCellWithReuseIdentifier: userLikeCollectionViewCell.identifier)
+        
+        profileView.userCollectionView.delegate = self
+        profileView.userCollectionView.dataSource = self
+        profileView.userCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
     }
+    
+    private func addGestureRecognizers() {
+        // 탭 제스처 추가
+        let lampTapGesture = UITapGestureRecognizer(target: self, action: #selector(lampStackTapped))
+        profileView.lampStackView.addGestureRecognizer(lampTapGesture)
+        
+        let scrapTapGesture = UITapGestureRecognizer(target: self, action: #selector(scrapStackTapped))
+        profileView.scrapStackView.addGestureRecognizer(scrapTapGesture)
+
+        let estimateTapGesture = UITapGestureRecognizer(target: self, action: #selector(estimateStackTapped))
+        profileView.estimateStackView.addGestureRecognizer(estimateTapGesture)
+    }
+    
+    @objc func lampStackTapped() {
+        self.selectedColor = .systemRed
+        print("램프 탭")
+        DispatchQueue.main.async {
+            self.profileView.userCollectionView.reloadData()
+        }
+    }
+
+    @objc func scrapStackTapped() {
+        self.selectedColor = .systemCyan
+        print("스크랩 탭")
+        DispatchQueue.main.async {
+            self.profileView.userCollectionView.reloadData()
+        }
+    }
+
+    @objc func estimateStackTapped() {
+        self.selectedColor = .systemMint
+        print("리뷰 탭")
+        DispatchQueue.main.async {
+            self.profileView.userCollectionView.reloadData()
+        }
+    }
+    
+    
+    func addTapGesture(to stackView: UIStackView, action: Selector) {
+        let tapGesture = UITapGestureRecognizer(target: self, action: action)
+        stackView.addGestureRecognizer(tapGesture)
+    }
+    
 }
 
 extension ProfileViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        
+        if collectionView == profileView.userLikesCollectionView {
+            return 5
+        }
+        
+        if collectionView == profileView.userCollectionView {
+            return 20
+        }
+        
+        return 10
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: userLikeCollectionViewCell.identifier, for: indexPath) as? userLikeCollectionViewCell else { return UICollectionViewCell() }
-        return cell
+        
+        if collectionView == profileView.userLikesCollectionView {
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: userLikeCollectionViewCell.identifier, for: indexPath) as? userLikeCollectionViewCell else { return UICollectionViewCell() }
+            return cell
+        }
+        
+        if collectionView == profileView.userCollectionView {
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+            
+            cell.backgroundColor = self.selectedColor
+            return cell
+        }
+        
+        return UICollectionViewCell()
     }
-    
-    
 }

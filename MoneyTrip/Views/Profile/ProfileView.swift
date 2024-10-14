@@ -16,6 +16,8 @@ class ProfileView: UIView {
         return view
     }()
     
+    // MARK: - Profile HeaderView
+    
     var profileHeaderview: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -77,26 +79,70 @@ class ProfileView: UIView {
     
     let userLikesCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 5
-        layout.minimumInteritemSpacing = 5
+        layout.minimumLineSpacing = 2
+        layout.minimumInteritemSpacing = 2
         layout.scrollDirection = .horizontal
         layout.itemSize = CGSize(width: 66, height: 22)
         // layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .secondarySystemBackground
-        collectionView.layer.cornerRadius = 5
-        collectionView.clipsToBounds = true
+        //        collectionView.backgroundColor = .secondarySystemBackground
+        //        collectionView.layer.cornerRadius = 5
+        //        collectionView.clipsToBounds = true
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.showsHorizontalScrollIndicator = false
         return collectionView
     }()
+    
+    
+    // MARK: - Profile Body View
+    let userActivityView: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = .systemBackground
+        view.layer.cornerRadius = 15
+        view.layer.shadowColor = UIColor.systemMint.cgColor
+        view.layer.shadowOffset = CGSize(width: 0, height: 10)
+        view.layer.shadowRadius = 20
+        view.layer.shadowOpacity = 0.5
+        return view
+    }()
+    
+    // 각 스택뷰를 클래스 속성으로 선언
+    var lampStackView: UIStackView!
+    var scrapStackView: UIStackView!
+    var estimateStackView: UIStackView!
+    
+    
+    let userCollectionView: UICollectionView = {
+        let spacing: CGFloat = 3
+        let totalSapcing = spacing * 2
+        
+        let layout = UICollectionViewFlowLayout()
+        layout.minimumLineSpacing = spacing
+        layout.minimumInteritemSpacing = 0
+        layout.scrollDirection = .vertical
+        layout.itemSize = CGSize(width: (UIScreen.main.bounds.width - totalSapcing) / 3, height: 150)
+        
+        // layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+        
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.backgroundColor = .secondarySystemBackground
+        //        collectionView.layer.cornerRadius = 5
+        //        collectionView.clipsToBounds = true
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.showsHorizontalScrollIndicator = false
+        return collectionView
+    }()
+    
     
     // MARK: - Initializations
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .systemBackground
         
+        // 사용자의 피드, 스크랩 등 내역 스택뷰
+        // userInfoStackView()
         configureConstraints()
     }
     
@@ -115,6 +161,10 @@ class ProfileView: UIView {
         profileHeaderview.addSubview(profileIntroLabel)
         profileHeaderview.addSubview(userLikesCollectionView)
         
+        basicView.addSubview(userActivityView)
+        basicView.addSubview(userCollectionView)
+        
+        
         let basicViewConstraints = [
             basicView.leadingAnchor.constraint(equalTo: leadingAnchor),
             basicView.trailingAnchor.constraint(equalTo: trailingAnchor),
@@ -125,7 +175,7 @@ class ProfileView: UIView {
         let profileHeaderviewConstraints = [
             profileHeaderview.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 10),
             profileHeaderview.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -10),
-            profileHeaderview.topAnchor.constraint(equalTo: basicView.topAnchor),
+            profileHeaderview.topAnchor.constraint(equalTo: basicView.topAnchor, constant: 5),
             profileHeaderview.heightAnchor.constraint(equalToConstant: 140)
         ]
         
@@ -154,9 +204,24 @@ class ProfileView: UIView {
         
         let userLikesCollectionViewConstraints = [
             userLikesCollectionView.leadingAnchor.constraint(equalTo: profileIntroLabel.leadingAnchor),
-            userLikesCollectionView.topAnchor.constraint(equalTo: profileIntroLabel.bottomAnchor, constant: 10),
+            userLikesCollectionView.topAnchor.constraint(equalTo: profileIntroLabel.bottomAnchor, constant: 15),
             userLikesCollectionView.trailingAnchor.constraint(equalTo: profileHeaderview.trailingAnchor, constant: -10),
-            userLikesCollectionView.heightAnchor.constraint(equalToConstant: 60)
+            userLikesCollectionView.heightAnchor.constraint(equalToConstant: 55)
+        ]
+        
+        let userActivityViewConstraints = [
+            userActivityView.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 10),
+            userActivityView.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -10),
+            userActivityView.topAnchor.constraint(equalTo: profileHeaderview.bottomAnchor, constant: 20),
+            userActivityView.heightAnchor.constraint(equalToConstant: 80)
+        ]
+        
+        let userCollectionViewConstraints = [
+            userCollectionView.leadingAnchor.constraint(equalTo: basicView.leadingAnchor),
+            userCollectionView.trailingAnchor.constraint(equalTo: basicView.trailingAnchor),
+            userCollectionView.widthAnchor.constraint(equalTo: basicView.widthAnchor),
+            userCollectionView.topAnchor.constraint(equalTo: userActivityView.bottomAnchor, constant: 25),
+            userCollectionView.bottomAnchor.constraint(equalTo: basicView.safeAreaLayoutGuide.bottomAnchor, constant: -10)
         ]
         
         NSLayoutConstraint.activate(basicViewConstraints)
@@ -166,5 +231,101 @@ class ProfileView: UIView {
         NSLayoutConstraint.activate(profileEditButtonConstraints)
         NSLayoutConstraint.activate(profileIntroLabelConstraints)
         NSLayoutConstraint.activate(userLikesCollectionViewConstraints)
+        NSLayoutConstraint.activate(userActivityViewConstraints)
+        NSLayoutConstraint.activate(userCollectionViewConstraints)
+    }
+    
+    
+    // MARK: - Functions
+    func createLabel(text: String) -> UILabel {
+        let label = UILabel()
+        label.text = text
+        label.textAlignment = .center
+        label.font = UIFont(name: "HakgyoansimBunpilR", size: 18)
+        label.textColor = .label
+        return label
+    }
+    
+    func createValueLabel(text: String) -> UILabel {
+        let label = UILabel()
+        label.text = text
+        label.textAlignment = .center
+        label.font = UIFont(name: "HakgyoansimBunpilR", size: 18)
+        label.textColor = .label
+        return label
+    }
+    
+    func createVerticalStackView(arrangedSubviews: [UIView]) -> UIStackView {
+        let stackView = UIStackView(arrangedSubviews: arrangedSubviews)
+        stackView.axis = .vertical
+        stackView.alignment = .center
+        stackView.spacing = 4
+        return stackView
+    }
+    
+    func createDivider() -> UIView {
+        let divider = UIView()
+        divider.backgroundColor = .lightGray
+        divider.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            divider.widthAnchor.constraint(equalToConstant: 1),
+            divider.heightAnchor.constraint(equalToConstant: 30)
+        ])
+        return divider
+    }
+    
+    func createSpace() -> UIView {
+        let space = UIView()
+        space.backgroundColor = .clear
+        space.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            space.widthAnchor.constraint(equalToConstant: 1),
+            space.heightAnchor.constraint(equalToConstant: 30)
+        ])
+        return space
+    }
+    
+    func userInfoStackView() {
+        // 세로 스택 (나의 램프)
+        let lampLabel = createLabel(text: "램프")
+        let lampValueLabel = createValueLabel(text: "0")
+        lampStackView = createVerticalStackView(arrangedSubviews: [lampLabel, lampValueLabel])
+        
+        // 세로 스택 (스크랩)
+        let scrapLabel = createLabel(text: "스크랩")
+        let scrapValueLabel = createValueLabel(text: "0")
+        scrapStackView = createVerticalStackView(arrangedSubviews: [scrapLabel, scrapValueLabel])
+        
+        // 세로 스택 (평가 내역)
+        let estimateLabel = createLabel(text: "리뷰")
+        let estimateValueLabel = createValueLabel(text: "0")
+        estimateStackView = createVerticalStackView(arrangedSubviews: [estimateLabel, estimateValueLabel])
+        
+        // 구분선 생성
+        let divideLine1 = createDivider()
+        let divideLine2 = createDivider()
+        
+        // leading, traililng space 생성
+        let space1 = createSpace()
+        let space2 = createSpace()
+        
+        // 전체 가로 스택
+        let userInfoHorizontalStackView = UIStackView(arrangedSubviews: [space1, lampStackView, divideLine1, scrapStackView, divideLine2, estimateStackView, space2])
+        userInfoHorizontalStackView.axis = .horizontal
+        userInfoHorizontalStackView.alignment = .center
+        userInfoHorizontalStackView.distribution = .equalSpacing
+        userInfoHorizontalStackView.spacing = 16
+        
+        userActivityView.addSubview(userInfoHorizontalStackView)
+        
+        
+        // 제약 조건 설정
+        userInfoHorizontalStackView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            userInfoHorizontalStackView.leadingAnchor.constraint(equalTo: userActivityView.leadingAnchor),
+            userInfoHorizontalStackView.trailingAnchor.constraint(equalTo: userActivityView.trailingAnchor),
+            userInfoHorizontalStackView.centerYAnchor.constraint(equalTo: userActivityView.centerYAnchor)
+        ])
     }
 }
