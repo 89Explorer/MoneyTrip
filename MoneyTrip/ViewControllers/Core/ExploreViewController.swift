@@ -155,8 +155,6 @@ extension ExploreViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SectionTableViewCell.identifier, for: indexPath) as? SectionTableViewCell else { return UITableViewCell() }
         
-        cell.backgroundColor = .systemOrange
-        
         return cell
     }
     

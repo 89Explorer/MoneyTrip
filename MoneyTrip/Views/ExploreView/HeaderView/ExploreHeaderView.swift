@@ -16,7 +16,7 @@ class ExploreHeaderView: UIView {
         let view = UIView()
         view.backgroundColor = .systemBackground
         view.translatesAutoresizingMaskIntoConstraints = false
-        view.layer.cornerRadius = 20
+        view.layer.cornerRadius = 10
         view.layer.maskedCorners = [.layerMinXMaxYCorner,
                                     .layerMaxXMaxYCorner]  // 좌, 우 하단 적용
         view.layer.shadowColor = UIColor.label.cgColor
@@ -40,7 +40,7 @@ class ExploreHeaderView: UIView {
     
     let recommendSpotTitle: UILabel = {
         let label = UILabel()
-        label.text = "오늘, 이 곳은 어떤가요? 😀"
+        label.text = "랜덤 리스트, 이 곳은 어떤가요? 😀"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont(name: "HakgyoansimBunpilR", size: 18)
         label.textColor = .label
@@ -142,13 +142,13 @@ class ExploreHeaderView: UIView {
 //        ]
         
         let recommendSpotTitleConstraints = [
-            recommendSpotTitle.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 20),
+            recommendSpotTitle.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 10),
             recommendSpotTitle.topAnchor.constraint(equalTo: basicView.topAnchor, constant: 10)
         ]
         
         let recommenSpotCollectionViewConstraints = [
-            recommenSpotCollectionView.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 20),
-            recommenSpotCollectionView.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -20),
+            recommenSpotCollectionView.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 10),
+            recommenSpotCollectionView.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -10),
             recommenSpotCollectionView.topAnchor.constraint(equalTo: recommendSpotTitle.bottomAnchor, constant: 10),
             recommenSpotCollectionView.heightAnchor.constraint(equalToConstant: 300)
         ]

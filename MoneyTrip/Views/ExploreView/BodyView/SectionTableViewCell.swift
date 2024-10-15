@@ -22,6 +22,8 @@ class SectionTableViewCell: UITableViewCell {
         // layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.layer.cornerRadius = 5
+        collectionView.clipsToBounds = true
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.showsHorizontalScrollIndicator = false
         return collectionView
@@ -35,7 +37,7 @@ class SectionTableViewCell: UITableViewCell {
         
         sectionCollectionView.delegate = self
         sectionCollectionView.dataSource = self
-        sectionCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        sectionCollectionView.register(SectionTableViewCollectionViewCell.self, forCellWithReuseIdentifier: SectionTableViewCollectionViewCell.identifier)
         
         configureConstraints()
     }
@@ -64,9 +66,9 @@ extension SectionTableViewCell: UICollectionViewDelegate, UICollectionViewDataSo
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
         
-        cell.backgroundColor = .systemOrange
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SectionTableViewCollectionViewCell.identifier, for: indexPath) as? SectionTableViewCollectionViewCell else { return UICollectionViewCell() }
+        
         return cell
     }
 }

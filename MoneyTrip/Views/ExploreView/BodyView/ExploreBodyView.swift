@@ -20,6 +20,8 @@ class ExploreBodyView: UIView {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.isScrollEnabled = false
+        tableView.layer.cornerRadius = 5
+        tableView.clipsToBounds = true
         tableView.tintColor = .label
         tableView.separatorStyle = .none
         return tableView

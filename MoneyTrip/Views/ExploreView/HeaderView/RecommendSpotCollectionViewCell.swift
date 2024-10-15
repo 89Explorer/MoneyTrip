@@ -17,6 +17,8 @@ class RecommendSpotCollectionViewCell: UICollectionViewCell {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .secondarySystemBackground
+        view.layer.cornerRadius = 5
+        view.clipsToBounds = true
         return view
     }()
     
@@ -45,6 +47,7 @@ class RecommendSpotCollectionViewCell: UICollectionViewCell {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.contentMode = .scaleAspectFill
+        imageView.layer.cornerRadius = 5
         imageView.clipsToBounds = true
         imageView.image = UIImage(named: "profile")
         imageView.tintColor = .white
@@ -88,8 +91,8 @@ class RecommendSpotCollectionViewCell: UICollectionViewCell {
             spotImage.leadingAnchor.constraint(equalTo: basicView.leadingAnchor),
             spotImage.trailingAnchor.constraint(equalTo: basicView.trailingAnchor),
             //spotImage.topAnchor.constraint(equalTo: spotLabel.bottomAnchor, constant: 5),
-            spotImage.heightAnchor.constraint(equalToConstant: 265),
-            spotImage.bottomAnchor.constraint(equalTo: basicView.bottomAnchor, constant: -5)
+            spotImage.heightAnchor.constraint(equalToConstant: 270),
+            spotImage.bottomAnchor.constraint(equalTo: basicView.bottomAnchor)
         ]
         
         let bookMarkButtonConstraints = [
