@@ -15,7 +15,7 @@ class ExploreMainView: UIView {
         view.translatesAutoresizingMaskIntoConstraints = false
         view.backgroundColor = .systemBackground
         view.showsVerticalScrollIndicator = false
-        view.contentInsetAdjustmentBehavior = .never // Safe Area 인셋 무시
+        //view.contentInsetAdjustmentBehavior = .never // Safe Area 인셋 무시
         return view
     }()
     
@@ -65,15 +65,15 @@ class ExploreMainView: UIView {
             headerView.trailingAnchor.constraint(equalTo: basicView.trailingAnchor),
             headerView.topAnchor.constraint(equalTo: basicView.topAnchor),
             headerView.widthAnchor.constraint(equalTo: basicView.widthAnchor),
-            headerView.heightAnchor.constraint(equalToConstant: 580)
+            headerView.heightAnchor.constraint(equalToConstant: 350)
         ]
         
         let bodyViewConstraints = [
             bodyView.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 10),
             bodyView.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -10),
             bodyView.topAnchor.constraint(equalTo: headerView.bottomAnchor, constant: 35),
-            bodyView.heightAnchor.constraint(equalToConstant: 1280),
-            bodyView.bottomAnchor.constraint(equalTo: basicView.bottomAnchor, constant: -70)
+            bodyView.heightAnchor.constraint(equalToConstant: 1250),
+            bodyView.bottomAnchor.constraint(equalTo: basicView.bottomAnchor)
         ]
         
         NSLayoutConstraint.activate(basicViewConstraints)

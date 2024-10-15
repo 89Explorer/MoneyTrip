@@ -19,10 +19,10 @@ class ExploreHeaderView: UIView {
         view.layer.cornerRadius = 20
         view.layer.maskedCorners = [.layerMinXMaxYCorner,
                                     .layerMaxXMaxYCorner]  // 좌, 우 하단 적용
-        view.layer.shadowColor = UIColor.systemMint.cgColor
-        view.layer.shadowOpacity = 1
-        view.layer.shadowOffset = CGSize(width: 0, height: 0)
-        view.layer.shadowRadius = 20
+        view.layer.shadowColor = UIColor.label.cgColor
+        view.layer.shadowOpacity = 0.5
+        view.layer.shadowOffset = CGSize(width: 0, height: 20)
+        view.layer.shadowRadius = 5
         
         // view.layer.shadowPath = UIBezierPath(rect: view.bounds).cgPath
         // 선택적으로 그림자 경로를 설정하여 성능 최적화
@@ -38,46 +38,55 @@ class ExploreHeaderView: UIView {
 //        return label
 //    }()
     
-    let recommenSpotCollectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 10
-        layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 300, height: 280)
-        // layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .secondarySystemBackground
-        collectionView.layer.cornerRadius = 5
-        collectionView.clipsToBounds = true
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.showsHorizontalScrollIndicator = false
-        return collectionView
-    }()
-    
-    let areaTitle: UILabel = {
+    let recommendSpotTitle: UILabel = {
         let label = UILabel()
-        label.text = "지역을 선택해주세요😀"
+        label.text = "오늘, 이 곳은 어떤가요? 😀"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont(name: "HakgyoansimBunpilR", size: 18)
         label.textColor = .label
         return label
     }()
     
-    let areaCollectionView: UICollectionView = {
+    let recommenSpotCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 10
         layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 100, height: 50)
+        layout.itemSize = CGSize(width: 250, height: 300)
         // layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
         
         let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.backgroundColor = .secondarySystemBackground
-        collectionView.layer.cornerRadius = 5
-        collectionView.clipsToBounds = true
+//        collectionView.backgroundColor = .secondarySystemBackground
+//        collectionView.layer.cornerRadius = 5
+//        collectionView.clipsToBounds = true
         collectionView.translatesAutoresizingMaskIntoConstraints = false
         collectionView.showsHorizontalScrollIndicator = false
         return collectionView
     }()
+    
+//    let areaTitle: UILabel = {
+//        let label = UILabel()
+//        label.text = "지역을 선택해주세요😀"
+//        label.translatesAutoresizingMaskIntoConstraints = false
+//        label.font = UIFont(name: "HakgyoansimBunpilR", size: 18)
+//        label.textColor = .label
+//        return label
+//    }()
+    
+//    let areaCollectionView: UICollectionView = {
+//        let layout = UICollectionViewFlowLayout()
+//        layout.minimumLineSpacing = 10
+//        layout.scrollDirection = .horizontal
+//        layout.itemSize = CGSize(width: 100, height: 50)
+//        // layout.estimatedItemSize = UICollectionViewFlowLayout.automaticSize
+//        
+//        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+//        collectionView.backgroundColor = .secondarySystemBackground
+//        collectionView.layer.cornerRadius = 5
+//        collectionView.clipsToBounds = true
+//        collectionView.translatesAutoresizingMaskIntoConstraints = false
+//        collectionView.showsHorizontalScrollIndicator = false
+//        return collectionView
+//    }()
 
 //    let alarmButton: UIButton = {
 //        let button = UIButton(type: .system)
@@ -98,9 +107,10 @@ class ExploreHeaderView: UIView {
         addSubview(basicView)
         //basicView.addSubview(titleLabel)
         //basicView.addSubview(alarmButton)
+        basicView.addSubview(recommendSpotTitle)
         basicView.addSubview(recommenSpotCollectionView)
-        basicView.addSubview(areaTitle)
-        basicView.addSubview(areaCollectionView)
+//        basicView.addSubview(areaTitle)
+//        basicView.addSubview(areaCollectionView)
         
         configureConstraints()
     }
@@ -131,30 +141,36 @@ class ExploreHeaderView: UIView {
 //            alarmButton.topAnchor.constraint(equalTo: titleLabel.topAnchor)
 //        ]
         
+        let recommendSpotTitleConstraints = [
+            recommendSpotTitle.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 20),
+            recommendSpotTitle.topAnchor.constraint(equalTo: basicView.topAnchor, constant: 10)
+        ]
+        
         let recommenSpotCollectionViewConstraints = [
             recommenSpotCollectionView.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 20),
             recommenSpotCollectionView.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -20),
-            recommenSpotCollectionView.topAnchor.constraint(equalTo: basicView.safeAreaLayoutGuide.topAnchor),
+            recommenSpotCollectionView.topAnchor.constraint(equalTo: recommendSpotTitle.bottomAnchor, constant: 10),
             recommenSpotCollectionView.heightAnchor.constraint(equalToConstant: 300)
         ]
         
-        let areaTitleConstraints = [
-            areaTitle.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 30),
-            areaTitle.topAnchor.constraint(equalTo: recommenSpotCollectionView.bottomAnchor, constant: 10)
-        ]
+//        let areaTitleConstraints = [
+//            areaTitle.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 30),
+//            areaTitle.topAnchor.constraint(equalTo: recommenSpotCollectionView.bottomAnchor, constant: 10)
+//        ]
         
-        let areaCollectionViewConstraints = [
-            areaCollectionView.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 20),
-            areaCollectionView.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -20),
-            areaCollectionView.topAnchor.constraint(equalTo: areaTitle.bottomAnchor, constant: 10),
-            areaCollectionView.heightAnchor.constraint(equalToConstant: 120)
-        ]
+//        let areaCollectionViewConstraints = [
+//            areaCollectionView.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 20),
+//            areaCollectionView.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -20),
+//            areaCollectionView.topAnchor.constraint(equalTo: areaTitle.bottomAnchor, constant: 10),
+//            areaCollectionView.heightAnchor.constraint(equalToConstant: 120)
+//        ]
         
         NSLayoutConstraint.activate(basicViewConstraints)
+        NSLayoutConstraint.activate(recommendSpotTitleConstraints)
 //        NSLayoutConstraint.activate(titleLabelConstraints)
 //        NSLayoutConstraint.activate(alarmButtonConstraints)
         NSLayoutConstraint.activate(recommenSpotCollectionViewConstraints)
-        NSLayoutConstraint.activate(areaTitleConstraints)
-        NSLayoutConstraint.activate(areaCollectionViewConstraints)
+//        NSLayoutConstraint.activate(areaTitleConstraints)
+ //       NSLayoutConstraint.activate(areaCollectionViewConstraints)
     }
 }

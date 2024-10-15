@@ -84,11 +84,11 @@ class ExploreViewController: UIViewController {
     func configureCollectionView() {
         exploreMainView.headerView.recommenSpotCollectionView.delegate = self
         exploreMainView.headerView.recommenSpotCollectionView.dataSource = self
-        exploreMainView.headerView.recommenSpotCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        exploreMainView.headerView.recommenSpotCollectionView.register(RecommendSpotCollectionViewCell.self, forCellWithReuseIdentifier: RecommendSpotCollectionViewCell.identifier)
         
-        exploreMainView.headerView.areaCollectionView.delegate = self
-        exploreMainView.headerView.areaCollectionView.dataSource = self
-        exploreMainView.headerView.areaCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+//        exploreMainView.headerView.areaCollectionView.delegate = self
+//        exploreMainView.headerView.areaCollectionView.dataSource = self
+//        exploreMainView.headerView.areaCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
     }
     
     /// 홈화면 테이블뷰 관련 델리게이트 및 데이터소스를 지정하는 함수
@@ -118,25 +118,24 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
             return 5
         }
         
-        if collectionView == exploreMainView.headerView.areaCollectionView {
-            return 17
-        }
+//        if collectionView == exploreMainView.headerView.areaCollectionView {
+//            return 17
+//        }
         
         return 10
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == exploreMainView.headerView.recommenSpotCollectionView {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-            cell.backgroundColor = .systemRed
+            guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendSpotCollectionViewCell.identifier, for: indexPath) as? RecommendSpotCollectionViewCell else { return UICollectionViewCell() }
             return cell
         }
         
-        if collectionView == exploreMainView.headerView.areaCollectionView {
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-            cell.backgroundColor = .systemYellow
-            return cell
-        }
+//        if collectionView == exploreMainView.headerView.areaCollectionView {
+//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+//            cell.backgroundColor = .systemYellow
+//            return cell
+//        }
         
         return UICollectionViewCell()
     }
