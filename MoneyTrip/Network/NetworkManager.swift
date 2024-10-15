@@ -20,6 +20,22 @@ class NetworkManager {
     
     static let shared = NetworkManager()
     
+    var totalPages: Int?
+
+    // 앱 초기화 시 totalPages 계산
+    func initailizeTotalPages(completion: @escaping(Result<Void, Error>) -> Void) {
+        getAreaBasedList { result in
+            switch result {
+            case .success(let item):
+                let totalCounts = item.response.body.totalCount
+                self.totalPages = (totalCounts / 10) + 1
+                completion(.success(()))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
     
     // 전체 관광정보 조회 관련 함수 (관광지, 문화시설, 여행코스, 숙박, 쇼핑 포함)
     func getAreaBasedList(pageNo: String = "1", completion: @escaping (Result<AttractionResponse, Error>) -> Void) {
@@ -60,5 +76,24 @@ class NetworkManager {
     }
     
     
-
+    // 무작위로 받아오는 함수
+    func fetchRandomAttractions(completion: @escaping (Result<AttractionResponse, Error>) -> Void) {
+        guard let totalPages = totalPages else {
+            print("error1")
+            return
+        }
+        
+        let randomPage = "\(Int.random(in: 1...totalPages))"
+        
+        // 랜덤 페이지를 기반으로 실제 데이터를 요청
+        getAreaBasedList(pageNo: randomPage) { result in
+            switch result {
+            case .success(let item):
+                print(item.response.body.items.item[0])
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+        
+    }
 }

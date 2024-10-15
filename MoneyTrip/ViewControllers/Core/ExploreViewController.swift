@@ -35,10 +35,13 @@ class ExploreViewController: UIViewController {
         
         // 화면을 아래로 스크롤하면 네비게이션바 부분이 숨겨지고, 반대로 하면 나타나는 기능
         navigationController?.hidesBarsOnSwipe = true
-        
-        
-        NetworkManager.shared.getAreaBasedList { _ in
-            
+        NetworkManager.shared.fetchRandomAttractions { result in
+            switch result {
+            case .success(let item):
+                print(item.response.body.items.item[0])
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
         }
     }
     
