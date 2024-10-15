@@ -35,6 +35,11 @@ class ExploreViewController: UIViewController {
         
         // 화면을 아래로 스크롤하면 네비게이션바 부분이 숨겨지고, 반대로 하면 나타나는 기능
         navigationController?.hidesBarsOnSwipe = true
+        
+        
+        NetworkManager.shared.getAreaBasedList { _ in
+            
+        }
     }
     
     // 네비게이션바를 투명하게 만드는 함수
