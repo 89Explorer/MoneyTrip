@@ -57,7 +57,7 @@ struct AttractionItem: Codable {
     let modifiedtime: String
     let sigungucode: String
     let tel: String?
-    let title: String
+    let title: String?
     let zipcode: String
 }
 

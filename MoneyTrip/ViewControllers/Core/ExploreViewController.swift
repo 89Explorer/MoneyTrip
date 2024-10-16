@@ -12,6 +12,8 @@ class ExploreViewController: UIViewController {
     // MARK: - Variables
     var categories: [String] = ["자연 여행", "문화 여행", "음식 여행", "코스 여행", "쇼핑 여행"]
     var lastContentOffset: CGFloat = 0.0
+    // 랜덤으로 받아온 관광지 정보를 담은 배열
+    var randomSpotArray: [AttractionItem] = []
     
     // MARK: - UI Components
     let exploreMainView: ExploreMainView = {
@@ -35,24 +37,22 @@ class ExploreViewController: UIViewController {
         
         // 화면을 아래로 스크롤하면 네비게이션바 부분이 숨겨지고, 반대로 하면 나타나는 기능
         navigationController?.hidesBarsOnSwipe = true
-        NetworkManager.shared.fetchRandomAttractions { result in
-            switch result {
-            case .success(let item):
-                print(item.response.body.items.item[0])
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
+        getRandomSpot()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        getRandomSpot()
     }
     
     // 네비게이션바를 투명하게 만드는 함수
-//    override func viewWillAppear(_ animated: Bool) {
-//        super.viewWillAppear(animated)
-//        
-//        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
-//        navigationController?.navigationBar.shadowImage = UIImage()
-//        navigationController?.navigationBar.isTranslucent = true
-//    }
+    //    override func viewWillAppear(_ animated: Bool) {
+    //        super.viewWillAppear(animated)
+    //
+    //        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
+    //        navigationController?.navigationBar.shadowImage = UIImage()
+    //        navigationController?.navigationBar.isTranslucent = true
+    //    }
     
     // MARK: - Layouts
     private func configureConstraints() {
@@ -94,9 +94,9 @@ class ExploreViewController: UIViewController {
         exploreMainView.headerView.recommenSpotCollectionView.dataSource = self
         exploreMainView.headerView.recommenSpotCollectionView.register(RecommendSpotCollectionViewCell.self, forCellWithReuseIdentifier: RecommendSpotCollectionViewCell.identifier)
         
-//        exploreMainView.headerView.areaCollectionView.delegate = self
-//        exploreMainView.headerView.areaCollectionView.dataSource = self
-//        exploreMainView.headerView.areaCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        //        exploreMainView.headerView.areaCollectionView.delegate = self
+        //        exploreMainView.headerView.areaCollectionView.dataSource = self
+        //        exploreMainView.headerView.areaCollectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
     }
     
     /// 홈화면 테이블뷰 관련 델리게이트 및 데이터소스를 지정하는 함수
@@ -115,6 +115,24 @@ class ExploreViewController: UIViewController {
     @objc func didTappedAlarmbutton() {
         print("didTappedAlarmbutton() - called")
     }
+    
+    
+    
+    func getRandomSpot() {
+        
+        NetworkManager.shared.fetchRandomAttractions { result in
+            switch result {
+            case .success(let item):
+                self.randomSpotArray = item.response.body.items.item
+                DispatchQueue.main.async {
+                    self.exploreMainView.headerView.recommenSpotCollectionView.reloadData()
+                }
+                
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
 }
 
 
@@ -123,12 +141,12 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         if collectionView == exploreMainView.headerView.recommenSpotCollectionView {
-            return 5
+            return randomSpotArray.count
         }
         
-//        if collectionView == exploreMainView.headerView.areaCollectionView {
-//            return 17
-//        }
+        //        if collectionView == exploreMainView.headerView.areaCollectionView {
+        //            return 17
+        //        }
         
         return 10
     }
@@ -136,14 +154,17 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         if collectionView == exploreMainView.headerView.recommenSpotCollectionView {
             guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: RecommendSpotCollectionViewCell.identifier, for: indexPath) as? RecommendSpotCollectionViewCell else { return UICollectionViewCell() }
+            
+            let selectedItem = randomSpotArray[indexPath.item]
+            cell.getRandomSpot(with: selectedItem)
             return cell
         }
         
-//        if collectionView == exploreMainView.headerView.areaCollectionView {
-//            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-//            cell.backgroundColor = .systemYellow
-//            return cell
-//        }
+        //        if collectionView == exploreMainView.headerView.areaCollectionView {
+        //            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        //            cell.backgroundColor = .systemYellow
+        //            return cell
+        //        }
         
         return UICollectionViewCell()
     }

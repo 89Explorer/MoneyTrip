@@ -79,21 +79,19 @@ class NetworkManager {
     // 무작위로 받아오는 함수
     func fetchRandomAttractions(completion: @escaping (Result<AttractionResponse, Error>) -> Void) {
         guard let totalPages = totalPages else {
-            print("error1")
             return
         }
         
         let randomPage = "\(Int.random(in: 1...totalPages))"
         
         // 랜덤 페이지를 기반으로 실제 데이터를 요청
-        getAreaBasedList(pageNo: randomPage) { result in
-            switch result {
+        getAreaBasedList(pageNo: randomPage) { results in
+            switch results {
             case .success(let item):
-                print(item.response.body.items.item[0])
+                completion(.success(item))
             case .failure(let error):
-                print(error.localizedDescription)
+                completion(.failure(error))
             }
         }
-        
     }
 }

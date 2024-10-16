@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class RecommendSpotCollectionViewCell: UICollectionViewCell {
     
@@ -28,7 +29,7 @@ class RecommendSpotCollectionViewCell: UICollectionViewCell {
         let configure = UIImage.SymbolConfiguration(pointSize: 25)
         let image = UIImage(systemName: "bookmark.circle.fill", withConfiguration: configure)
         button.setImage(image, for: .normal)
-        button.tintColor = .black
+        button.tintColor = .white
         return button
     }()
     
@@ -38,8 +39,9 @@ class RecommendSpotCollectionViewCell: UICollectionViewCell {
         label.text = "아이와 함께 가보면 좋을 공원"
         label.numberOfLines = 0
         label.textAlignment = .left
-        label.font = UIFont(name: "HakgyoansimBunpilR", size: 16)
-        label.textColor = .label
+        // label.font = UIFont(name: "HakgyoansimBunpilR", size: 16)
+        label.font = .systemFont(ofSize: 16, weight: .bold)
+        label.textColor = .white
         return label
     }()
     
@@ -81,28 +83,40 @@ class RecommendSpotCollectionViewCell: UICollectionViewCell {
             basicView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ]
         
-        let spotLabelConstraints = [
-            spotLabel.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 5),
-            spotLabel.topAnchor.constraint(equalTo: basicView.topAnchor, constant: 5),
-            spotLabel.widthAnchor.constraint(equalToConstant: 260)
-        ]
-        
         let spotImageConstraints = [
             spotImage.leadingAnchor.constraint(equalTo: basicView.leadingAnchor),
             spotImage.trailingAnchor.constraint(equalTo: basicView.trailingAnchor),
-            //spotImage.topAnchor.constraint(equalTo: spotLabel.bottomAnchor, constant: 5),
-            spotImage.heightAnchor.constraint(equalToConstant: 270),
+            spotImage.topAnchor.constraint(equalTo: basicView.topAnchor),
             spotImage.bottomAnchor.constraint(equalTo: basicView.bottomAnchor)
         ]
         
+        let spotLabelConstraints = [
+            spotLabel.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 5),
+            spotLabel.bottomAnchor.constraint(equalTo: basicView.bottomAnchor, constant: -5),
+            spotLabel.widthAnchor.constraint(equalToConstant: 260)
+        ]
+        
         let bookMarkButtonConstraints = [
-            bookMarkButton.topAnchor.constraint(equalTo: spotImage.topAnchor, constant: 5),
-            bookMarkButton.trailingAnchor.constraint(equalTo: spotImage.trailingAnchor, constant: -5)
+            bookMarkButton.bottomAnchor.constraint(equalTo: basicView.bottomAnchor, constant: -5),
+            bookMarkButton.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -5)
         ]
     
         NSLayoutConstraint.activate(basicViewConstraints)
         NSLayoutConstraint.activate(spotImageConstraints)
         NSLayoutConstraint.activate(spotLabelConstraints)
         NSLayoutConstraint.activate(bookMarkButtonConstraints)
+    }
+    
+    // MARK: - Functions
+    func getRandomSpot(with item: AttractionItem) {
+        guard let imagePath = item.firstimage, let title = item.title else { return }
+        
+        let securePosterURL = imagePath.replacingOccurrences(of: "http://", with: "https://")
+        
+        let url = URL(string: securePosterURL)
+        
+        spotImage.sd_setImage(with: url)
+        spotLabel.text = title
+
     }
 }
