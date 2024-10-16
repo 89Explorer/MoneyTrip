@@ -14,6 +14,10 @@ class ExploreViewController: UIViewController {
     var lastContentOffset: CGFloat = 0.0
     // 랜덤으로 받아온 관광지 정보를 담은 배열
     var randomSpotArray: [AttractionItem] = []
+    var sectionsItems: [AttractionItem] = []
+    
+    // 앱이 닫혔다가 다시 열릴 때 갱신 조건을 위한 변수
+    private let lastClosedKey = "lastClosedKey"
     
     // MARK: - UI Components
     let exploreMainView: ExploreMainView = {
@@ -38,11 +42,20 @@ class ExploreViewController: UIViewController {
         // 화면을 아래로 스크롤하면 네비게이션바 부분이 숨겨지고, 반대로 하면 나타나는 기능
         navigationController?.hidesBarsOnSwipe = true
         getRandomSpot()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(appWillResignActive), name: UIApplication.willResignActiveNotification, object: nil)
+        
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        getRandomSpot()
+        // getRandomSpot()
+        //        exploreMainView.bodyView.sectionTableView.reloadData()
     }
     
     // 네비게이션바를 투명하게 만드는 함수
@@ -116,10 +129,24 @@ class ExploreViewController: UIViewController {
         print("didTappedAlarmbutton() - called")
     }
     
+    @objc func appWillResignActive() {
+        // 앱이 백그라운드로 가기 전에 현재 시간을 저장
+        UserDefaults.standard.set(Date(), forKey: lastClosedKey)
+    }
+
+    @objc func appDidBecomeActive() {
+        // 앱이 포그라운드로 돌아왔을 때
+        if let lastClosedDate = UserDefaults.standard.object(forKey: lastClosedKey) as? Date {
+            let timeInterval = Date().timeIntervalSince(lastClosedDate)
+            // 마지막 닫힌 시간으로부터 일정 시간이 지났는지 확인
+            if timeInterval > 60 * 5 { // 예: 5분 이상 경과
+                getRandomSpot() // 데이터 갱신
+            }
+        }
+    }
     
     
     func getRandomSpot() {
-        
         NetworkManager.shared.fetchRandomAttractions { result in
             switch result {
             case .success(let item):
@@ -127,7 +154,6 @@ class ExploreViewController: UIViewController {
                 DispatchQueue.main.async {
                     self.exploreMainView.headerView.recommenSpotCollectionView.reloadData()
                 }
-                
             case .failure(let error):
                 print(error.localizedDescription)
             }
@@ -168,6 +194,14 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
         
         return UICollectionViewCell()
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let selectedItem = randomSpotArray[indexPath.item]
+        
+        let detailVC = DetailViewController()
+        detailVC.selectedSpotItem = selectedItem
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
 }
 
 
@@ -183,6 +217,28 @@ extension ExploreViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: SectionTableViewCell.identifier, for: indexPath) as? SectionTableViewCell else { return UITableViewCell() }
+        
+        var selectedCategory: ContentCategory?
+        
+        switch indexPath.section {
+        case 0:
+            selectedCategory = .attractions
+        case 1:
+            selectedCategory = .facilities
+        case 2:
+            selectedCategory = .foods
+        case 3:
+            selectedCategory = .course
+            
+        case 4:
+            selectedCategory = .shopping
+        default:
+            return UITableViewCell()
+        }
+        
+        if let category = selectedCategory {
+            cell.getSectionData(contentTypeId: category.contentTypeId)
+        }
         
         return cell
     }
@@ -231,3 +287,17 @@ extension ExploreViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+
+
+// MARK: - Enum
+enum ContentCategory: String {
+    case attractions = "12"
+    case facilities = "14"
+    case foods = "39"
+    case course = "25"
+    case shopping = "38"
+    
+    var contentTypeId: String {
+        return self.rawValue
+    }
+}

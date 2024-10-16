@@ -38,7 +38,7 @@ class NetworkManager {
     
     
     // 전체 관광정보 조회 관련 함수 (관광지, 문화시설, 여행코스, 숙박, 쇼핑 포함)
-    func getAreaBasedList(pageNo: String = "1", completion: @escaping (Result<AttractionResponse, Error>) -> Void) {
+    func getAreaBasedList(pageNo: String = "1", contentTypeId: String = "12" ,completion: @escaping (Result<AttractionResponse, Error>) -> Void) {
         var components = URLComponents(string: "\(Constants.base_URL)/areaBasedList1")
         
         // 쿼리 아이템 설정
@@ -50,7 +50,8 @@ class NetworkManager {
             URLQueryItem(name: "MobileApp", value: "AppTest"),
             URLQueryItem(name: "_type", value: "json"),
             URLQueryItem(name: "listYN", value: "Y"),
-            URLQueryItem(name: "arrange", value: "O")
+            URLQueryItem(name: "arrange", value: "O"),
+            URLQueryItem(name: "contentTypeId", value: contentTypeId)
         ]
         
         // 퍼센트 인코딩 후 "+"를 "%2B"로 대체

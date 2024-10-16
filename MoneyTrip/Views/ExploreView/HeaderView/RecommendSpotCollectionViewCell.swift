@@ -65,6 +65,12 @@ class RecommendSpotCollectionViewCell: UICollectionViewCell {
         configureConstraints()
     }
     
+    // 가끔 이미지부분에 이미지가 안보일때를 대비
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        spotImage.image = nil // 셀이 재사용될 때 이미지를 초기화
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -93,7 +99,7 @@ class RecommendSpotCollectionViewCell: UICollectionViewCell {
         let spotLabelConstraints = [
             spotLabel.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 5),
             spotLabel.bottomAnchor.constraint(equalTo: basicView.bottomAnchor, constant: -5),
-            spotLabel.widthAnchor.constraint(equalToConstant: 260)
+            spotLabel.widthAnchor.constraint(equalToConstant: 200)
         ]
         
         let bookMarkButtonConstraints = [
@@ -117,6 +123,5 @@ class RecommendSpotCollectionViewCell: UICollectionViewCell {
         
         spotImage.sd_setImage(with: url)
         spotLabel.text = title
-
     }
 }

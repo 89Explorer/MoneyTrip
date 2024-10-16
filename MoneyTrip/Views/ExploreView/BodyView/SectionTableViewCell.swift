@@ -11,6 +11,8 @@ class SectionTableViewCell: UITableViewCell {
     
     // MARK: - Variables
     static let identifier = "SectionTableViewCell"
+    var selectedIndex: Int = 0 // 선택된 버튼의 인덱스
+    var sectionsItems: [AttractionItem] = []
     
     
     // MARK: - UI Components
@@ -58,17 +60,41 @@ class SectionTableViewCell: UITableViewCell {
         
         NSLayoutConstraint.activate(sectionCollectionViewConstraints)
     }
+    
+    
+    // MARK: - Functions
+    func getSectionData(contentTypeId: String) {
+        NetworkManager.shared.getAreaBasedList(contentTypeId: contentTypeId) { results in
+            switch results {
+            case .success(let item):
+                self.sectionsItems = item.response.body.items.item
+                DispatchQueue.main.async {
+                    self.sectionCollectionView.reloadData()
+                }
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
 }
 
 extension SectionTableViewCell: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return sectionsItems.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SectionTableViewCollectionViewCell.identifier, for: indexPath) as? SectionTableViewCollectionViewCell else { return UICollectionViewCell() }
-        
+
+        let selectedItem = sectionsItems[indexPath.row]
+        cell.getRandomSpot(with: selectedItem)
         return cell
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+    }
 }
+
+

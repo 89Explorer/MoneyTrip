@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class SectionTableViewCollectionViewCell: UICollectionViewCell {
     
@@ -43,10 +44,10 @@ class SectionTableViewCollectionViewCell: UICollectionViewCell {
     let bookMarkButton: UIButton = {
         let button = UIButton(type: .system)
         button.translatesAutoresizingMaskIntoConstraints = false
-        let configure = UIImage.SymbolConfiguration(pointSize: 10)
+        let configure = UIImage.SymbolConfiguration(pointSize: 14)
         let image = UIImage(systemName: "bookmark.circle.fill", withConfiguration: configure)
         button.setImage(image, for: .normal)
-        button.tintColor = .black
+        button.tintColor = .white
         return button
     }()
     
@@ -67,6 +68,7 @@ class SectionTableViewCollectionViewCell: UICollectionViewCell {
         addSubview(basicView)
         basicView.addSubview(spotImage)
         basicView.addSubview(spotLabel)
+        basicView.addSubview(bookMarkButton)
         
         let basicViewConstraints = [
             basicView.leadingAnchor.constraint(equalTo: leadingAnchor),
@@ -85,11 +87,29 @@ class SectionTableViewCollectionViewCell: UICollectionViewCell {
         let spotLabelConstraints = [
             spotLabel.leadingAnchor.constraint(equalTo: basicView.leadingAnchor, constant: 5),
             spotLabel.bottomAnchor.constraint(equalTo: basicView.bottomAnchor, constant: -5),
-            spotLabel.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -5)
+            spotLabel.widthAnchor.constraint(equalToConstant: 100)
+        ]
+        
+        let bookMarkButtonConstraints = [
+            bookMarkButton.trailingAnchor.constraint(equalTo: basicView.trailingAnchor, constant: -5),
+            bookMarkButton.bottomAnchor.constraint(equalTo: basicView.bottomAnchor, constant: -5)
         ]
         
         NSLayoutConstraint.activate(basicViewConstraints)
         NSLayoutConstraint.activate(spotImageConstraints)
         NSLayoutConstraint.activate(spotLabelConstraints)
+        NSLayoutConstraint.activate(bookMarkButtonConstraints)
+    }
+    
+    // MARK: - Functions
+    func getRandomSpot(with item: AttractionItem) {
+        guard let imagePath = item.firstimage, let title = item.title else { return }
+        
+        let securePosterURL = imagePath.replacingOccurrences(of: "http://", with: "https://")
+        
+        let url = URL(string: securePosterURL)
+        
+        spotImage.sd_setImage(with: url)
+        spotLabel.text = title
     }
 }
