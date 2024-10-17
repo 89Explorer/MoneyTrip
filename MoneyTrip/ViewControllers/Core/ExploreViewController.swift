@@ -41,21 +41,16 @@ class ExploreViewController: UIViewController {
         
         // 화면을 아래로 스크롤하면 네비게이션바 부분이 숨겨지고, 반대로 하면 나타나는 기능
         navigationController?.hidesBarsOnSwipe = true
-        getRandomSpot()
         
+        executeInOrder()
+        
+        // 앱의 데이터 갱신을 위한 호출 
         NotificationCenter.default.addObserver(self, selector: #selector(appDidBecomeActive), name: UIApplication.didBecomeActiveNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(appWillResignActive), name: UIApplication.willResignActiveNotification, object: nil)
-        
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        // getRandomSpot()
-        //        exploreMainView.bodyView.sectionTableView.reloadData()
     }
     
     // 네비게이션바를 투명하게 만드는 함수
@@ -133,7 +128,7 @@ class ExploreViewController: UIViewController {
         // 앱이 백그라운드로 가기 전에 현재 시간을 저장
         UserDefaults.standard.set(Date(), forKey: lastClosedKey)
     }
-
+    
     @objc func appDidBecomeActive() {
         // 앱이 포그라운드로 돌아왔을 때
         if let lastClosedDate = UserDefaults.standard.object(forKey: lastClosedKey) as? Date {
@@ -146,16 +141,48 @@ class ExploreViewController: UIViewController {
     }
     
     
+    @objc func customBackButtonTapped() {
+        // 뒤로가기 액션
+        navigationController?.popViewController(animated: true)
+    }
+    
+    // randomSpotArray에 데이터를 전달하는 함수
     func getRandomSpot() {
         NetworkManager.shared.fetchRandomAttractions { result in
             switch result {
             case .success(let item):
                 self.randomSpotArray = item.response.body.items.item
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
+    }
+    
+    // 전체 페이지수를 가져오는 데이터 
+    func getRandomPage(completion: @escaping (Result<Void, Error>) -> Void) {
+        NetworkManager.shared.initailizeTotalPages { result in
+            switch result {
+            case .success():
+                print("success")
+                completion(.success(()))
+            case .failure(let error):
+                print(error.localizedDescription)
+                completion(.failure(error))
+            }
+        }
+    }
+    
+    // getRandomPage가 먼저 실행되고 그 뒤로 getRandomSpot이 실행되게 호출하는 메서드
+    func executeInOrder() {
+        getRandomPage { result in
+            switch result {
+            case .success():
+                self.getRandomSpot()
                 DispatchQueue.main.async {
                     self.exploreMainView.headerView.recommenSpotCollectionView.reloadData()
                 }
             case .failure(let error):
-                print(error.localizedDescription)
+                print("Failed to get random Item: \(error.localizedDescription)")
             }
         }
     }
@@ -200,6 +227,22 @@ extension ExploreViewController: UICollectionViewDelegate, UICollectionViewDataS
         
         let detailVC = DetailViewController()
         detailVC.selectedSpotItem = selectedItem
+        
+        // 기본 백 버튼 숨기기
+        detailVC.navigationItem.hidesBackButton = true
+        
+        // UIButton으로 커스텀 백 버튼 생성
+        let customBackButton = UIButton(type: .system)
+        let configure = UIImage.SymbolConfiguration(pointSize: 24)
+        let image = UIImage(systemName: "arrowshape.backward.circle", withConfiguration: configure)
+        customBackButton.setImage(image, for: .normal)
+        customBackButton.tintColor = .label
+        customBackButton.addTarget(self, action: #selector(customBackButtonTapped), for: .touchUpInside)
+        
+        // UIBarButtonItem으로 변환하여 설정
+        let barButtonItem = UIBarButtonItem(customView: customBackButton)
+        detailVC.navigationItem.leftBarButtonItem = barButtonItem
+
         navigationController?.pushViewController(detailVC, animated: true)
     }
 }

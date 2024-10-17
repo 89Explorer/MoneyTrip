@@ -38,7 +38,7 @@ struct Items: Codable {
 
 // MARK: - AttractionItem
 struct AttractionItem: Codable {
-    let addr1: String
+    let addr1: String?
     let addr2: String?
     let areacode: String
     let booktour: String?
@@ -57,8 +57,11 @@ struct AttractionItem: Codable {
     let modifiedtime: String
     let sigungucode: String
     let tel: String?
+    let telname: String?
+    let homepage: String?
     let title: String?
     let zipcode: String
+    let overview: String?
 }
 
 

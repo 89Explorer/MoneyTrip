@@ -95,4 +95,55 @@ class NetworkManager {
             }
         }
     }
+    
+    
+    //
+
+    func getDetailCommon(contentId: String, contentTypeId: String, completion: @escaping (Result<AttractionResponse, Error>) -> Void) {
+        // URLComponents 설정
+        var components = URLComponents(string: "\(Constants.base_URL)/detailCommon1")
+        
+        // 쿼리 아이템 설정
+        components?.queryItems = [
+            URLQueryItem(name: "serviceKey", value: Constants.api_key),
+            URLQueryItem(name: "MobileOS", value: "ETC"),
+            URLQueryItem(name: "MobileApp", value: "AppTest"),
+            URLQueryItem(name: "_type", value: "json"),
+            URLQueryItem(name: "contentId", value: contentId),
+            URLQueryItem(name: "contentTypeId", value: contentTypeId),
+            URLQueryItem(name: "defaultYN", value: "Y"),
+            URLQueryItem(name: "firstImageYN", value: "Y"),
+            URLQueryItem(name: "areacodeYN", value: "Y"),
+            URLQueryItem(name: "catcodeYN", value: "Y"),
+            URLQueryItem(name: "addrinfoYN", value: "Y"),
+            URLQueryItem(name: "mapinfoYN", value: "Y"),
+            URLQueryItem(name: "overviewYN", value: "Y"),
+            URLQueryItem(name: "numOfRows", value: "10"),
+            URLQueryItem(name: "pageNo", value: "1")
+        ]
+        
+        // 퍼센트 인코딩 후 "+"를 "%2B"로 대체 (특정 상황에서 필요할 경우)
+        if let encodedQuery = components?.percentEncodedQuery?.replacingOccurrences(of: "%25", with: "%") {
+            components?.percentEncodedQuery = encodedQuery
+        }
+        
+        // URL 생성
+        guard let url = components?.url else { return }
+        
+        let task = URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
+            guard let data = data, error == nil else {
+                completion(.failure(error!))
+                return
+            }
+            
+            do {
+                let result = try JSONDecoder().decode(AttractionResponse.self, from: data)
+                completion(.success(result))
+            } catch {
+                completion(.failure(error))
+            }
+        }
+        task.resume()
+    }
+
 }

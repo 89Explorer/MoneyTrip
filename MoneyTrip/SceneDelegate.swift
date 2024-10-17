@@ -27,25 +27,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // iOS 13 이후에는 여기에 구현
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         
-        NetworkManager.shared.initailizeTotalPages { result in
-            switch result {
-            case.success():
-                print("Total Pages initialzied Successfully")
-                DispatchQueue.main.async {
-                    self.setupMainTabBarController()
-                }
-                
-            case .failure(let error):
-                print(error.localizedDescription)
-            }
-        }
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(frame: windowScene.coordinateSpace.bounds)
         window?.windowScene = windowScene
+        
+        self.setupMainTabBarController()
     }
     
     // 메인 탭바 관련 함수
     func setupMainTabBarController() {
+        
         let mainTabBarController = MainTabBarController()
         
         let exploreVC = UINavigationController(rootViewController: ExploreViewController())
